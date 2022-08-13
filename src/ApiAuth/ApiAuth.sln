@@ -6,6 +6,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{28918127-D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAuth.Data", "Data\ApiAuth.Data\ApiAuth.Data.csproj", "{FE815E64-767A-470F-88CB-FD116903179E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAuth.Data.Common", "Data\ApiAuth.Data.Common\ApiAuth.Data.Common.csproj", "{39F396C3-62C2-4A7C-8B9A-698A1BFB9F88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAuth.Models", "Data\ApiAuth.Models\ApiAuth.Models.csproj", "{1DCCA0CD-0E60-4D1B-95C1-0C2AC0E8BB4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,18 @@ Global
 		{FE815E64-767A-470F-88CB-FD116903179E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE815E64-767A-470F-88CB-FD116903179E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE815E64-767A-470F-88CB-FD116903179E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39F396C3-62C2-4A7C-8B9A-698A1BFB9F88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39F396C3-62C2-4A7C-8B9A-698A1BFB9F88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39F396C3-62C2-4A7C-8B9A-698A1BFB9F88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39F396C3-62C2-4A7C-8B9A-698A1BFB9F88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DCCA0CD-0E60-4D1B-95C1-0C2AC0E8BB4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DCCA0CD-0E60-4D1B-95C1-0C2AC0E8BB4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DCCA0CD-0E60-4D1B-95C1-0C2AC0E8BB4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DCCA0CD-0E60-4D1B-95C1-0C2AC0E8BB4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FE815E64-767A-470F-88CB-FD116903179E} = {28918127-DFD9-48A5-BC2C-228002E13F21}
+		{39F396C3-62C2-4A7C-8B9A-698A1BFB9F88} = {28918127-DFD9-48A5-BC2C-228002E13F21}
+		{1DCCA0CD-0E60-4D1B-95C1-0C2AC0E8BB4F} = {28918127-DFD9-48A5-BC2C-228002E13F21}
 	EndGlobalSection
 EndGlobal
