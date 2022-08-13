@@ -1,4 +1,8 @@
+using ApiAuth.Api.Common;
+using ApiAuth.Api.Common.Extensions;
 using ApiAuth.Api.Options;
+using ApiAuth.Models.Auth;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 
 namespace ApiAuth.Api;
@@ -15,6 +19,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        services.InstallServicesInAssembly(Configuration);
         services.AddControllers();
         services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiAuth.Api", Version = "v1"}); });
     }
@@ -32,6 +37,31 @@ public class Startup
             {
                 options.SwaggerEndpoint(swaggerOptions.UiEndpoint, swaggerOptions.Description);
             });
+        }
+        
+        using (var serviceScope = app.ApplicationServices.CreateScope())
+        {
+            var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                
+            var defaultUser = new DefaultUser();
+            Configuration.GetSection(nameof(DefaultUser)).Bind(defaultUser);
+            if (!roleManager.RoleExistsAsync(GlobalConstants.Roles.Admin).GetAwaiter().GetResult())
+            {
+                var adminRole = new ApplicationRole(GlobalConstants.Roles.Admin);
+                roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
+            }
+
+            if (userManager.FindByNameAsync(defaultUser.Username).GetAwaiter().GetResult() == null)
+            {
+                var newUser = new ApplicationUser
+                {
+                    UserName = defaultUser.Username,
+                    Email = defaultUser.Email
+                };
+                userManager.CreateAsync(newUser, defaultUser.Password).GetAwaiter().GetResult();
+                userManager.AddToRoleAsync(newUser, GlobalConstants.Roles.Admin).GetAwaiter().GetResult();
+            }
         }
 
         app.UseHttpsRedirection();
