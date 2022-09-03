@@ -21,7 +21,40 @@ public class Startup
     {
         services.InstallServicesInAssembly(Configuration);
         services.AddControllers();
-        services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiAuth.Api", Version = "v1"}); });
+        services.AddSwaggerGen(x =>
+        {
+            x.SwaggerDoc("v1",new OpenApiInfo {Title = "ApiAuth.Api", Version = "v1"});
+
+            // Authentication
+            var security = new OpenApiSecurityRequirement()
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        },
+                        Scheme = "oauth2",
+                        Name = "Bearer",
+                        In = ParameterLocation.Header,
+
+                    },
+                    new List<string>()
+                }
+            };
+
+            x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the bearer scheme",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey
+            });
+
+            x.AddSecurityRequirement(security);
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,7 +99,8 @@ public class Startup
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
+        app.UseAuthentication();
+        
         app.UseRouting();
 
         app.UseAuthorization();
