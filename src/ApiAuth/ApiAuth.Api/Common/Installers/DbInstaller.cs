@@ -13,7 +13,16 @@ public class DbInstaller : IInstaller
         {
             options.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
         })
-            .AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 3;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredUniqueChars = 0;
+                options.Password.RequireNonAlphanumeric = false;
+                options.SignIn.RequireConfirmedEmail = false;
+            })
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
     }

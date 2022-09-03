@@ -1,6 +1,8 @@
 using System.Text;
 using ApiAuth.Api.Common.Contracts;
 using ApiAuth.Api.Options;
+using ApiAuth.Api.Services;
+using ApiAuth.Api.Services.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,6 +15,8 @@ public class AuthInstaller: IInstaller
         var jwtSettings = new JwtSettings();
         configuration.Bind(nameof(jwtSettings), jwtSettings);
         services.AddSingleton(jwtSettings);
+
+        services.AddScoped<IAuthService, AuthService>();
         
         services.AddAuthentication(x =>
         {
