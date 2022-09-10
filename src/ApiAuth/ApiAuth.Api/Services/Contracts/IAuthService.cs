@@ -5,5 +5,5 @@ namespace ApiAuth.Api.Services.Contracts;
 
 public interface IAuthService
 {
-    Task<AuthenticationResult> CreateUserAsync(CreateUserRequestModel createUserRequest);
+    Task<AuthenticationResult> RegisterUserAsync(RegisterUserRequestModel registerUserRequest);
 }

@@ -10,6 +10,6 @@ internal static class V1
     {
         public const string SubRoute = $"{BaseRoute}/{Version}/users";
 
-        public const string Create = $"{SubRoute}/create";
+        public const string Register = $"{SubRoute}/register";
     }
 }

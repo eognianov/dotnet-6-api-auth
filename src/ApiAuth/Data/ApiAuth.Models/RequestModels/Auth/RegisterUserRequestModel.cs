@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ApiAuth.Models.RequestModels.Auth;
 
-public class CreateUserRequestModel
+public class RegisterUserRequestModel
 {
     [Required]
     public string Username { get; set; } = null!;

@@ -14,19 +14,20 @@ public class AuthController : Controller
         _authService = authService;
     }
 
-    [HttpPost(Common.Routes.V1.Users.Create)]
-    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestModel createUserRequest)
+    [HttpPost(Common.Routes.V1.Users.Register)]
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequestModel registerUserRequest)
     {
         if (!ModelState.IsValid)
         {
             
             return BadRequest(new AuthFailedResultModel
             {
+                // TODO: Get errors
                 Errors = new [] {"Validation Errors"}
             });
         }
         
-        var authResponse = await _authService.CreateUserAsync(createUserRequest);
+        var authResponse = await _authService.RegisterUserAsync(registerUserRequest);
 
         if (!authResponse.Success)
         {

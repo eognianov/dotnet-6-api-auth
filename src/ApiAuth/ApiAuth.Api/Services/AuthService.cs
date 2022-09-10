@@ -21,28 +21,28 @@ public class AuthService : IAuthService
         _jwtSettings = jwtSettings;
     }
 
-    public async Task<AuthenticationResult> CreateUserAsync(CreateUserRequestModel createUserRequest)
+    public async Task<AuthenticationResult> RegisterUserAsync(RegisterUserRequestModel registerUserRequest)
     {
-        var existingUserWithThisEmail = await _userManager.FindByEmailAsync(createUserRequest.Email);
-        var existingUSerWithThisUsername = await _userManager.FindByNameAsync(createUserRequest.Username);
+        var existingUserWithThisEmail = await _userManager.FindByEmailAsync(registerUserRequest.Email);
+        var existingUSerWithThisUsername = await _userManager.FindByNameAsync(registerUserRequest.Username);
         if (existingUserWithThisEmail != null || existingUSerWithThisUsername is not null)
         {
             return new AuthenticationResult
             {
                 Errors = new[]
                 {
-                    $"User with {(existingUserWithThisEmail?.Email is not null ? createUserRequest.Email : createUserRequest.Username)} already exists!"
+                    $"User with {(existingUserWithThisEmail?.Email is not null ? registerUserRequest.Email : registerUserRequest.Username)} already exists!"
                 }
             };
         }
 
         var newUser = new ApplicationUser
         {
-            Email = createUserRequest.Email,
-            UserName = createUserRequest.Username
+            Email = registerUserRequest.Email,
+            UserName = registerUserRequest.Username
         };
 
-        var createdUser = await _userManager.CreateAsync(newUser, createUserRequest.Password);
+        var createdUser = await _userManager.CreateAsync(newUser, registerUserRequest.Password);
 
         if (!createdUser.Succeeded)
         {
