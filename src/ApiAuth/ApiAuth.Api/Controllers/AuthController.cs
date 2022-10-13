@@ -39,7 +39,8 @@ public class AuthController : Controller
         return Ok(
             new AuthSuccessResultModel
             {
-                Token = authResponse.Token!
+                Token = authResponse.Token!,
+                ExpirationDate = authResponse.ExpirationDate
             });
     }
 
@@ -61,13 +62,14 @@ public class AuthController : Controller
         {
             return BadRequest(new AuthFailedResultModel
             {
-                Errors = authResponse.Errors
+                Errors = authResponse.Errors!
             });
         }
 
         return Ok(new AuthSuccessResultModel
         {
-            Token = authResponse.Token
+            Token = authResponse.Token!,
+            ExpirationDate = authResponse.ExpirationDate
         });
     }
 }

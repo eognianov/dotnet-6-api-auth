@@ -76,11 +76,17 @@ public class AuthService : IAuthService
             };
         }
 
-        return GenerateAuthenticationResultForUser(user);
+        return GenerateAuthenticationResultForUser(user, userLoginRequest.RememberMe);
     }
 
-    private AuthenticationResult GenerateAuthenticationResultForUser(IdentityUser user)
+    private AuthenticationResult GenerateAuthenticationResultForUser(IdentityUser user, bool rememberMe = false)
     {
+        var expirationDate = DateTime.UtcNow.AddHours(2);
+        
+        if (rememberMe)
+        {
+            expirationDate = DateTime.UtcNow.AddYears(1);
+        }
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -92,7 +98,7 @@ public class AuthService : IAuthService
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim("id", user.Id),
             }),
-            Expires = DateTime.UtcNow.AddHours(2),
+            Expires = expirationDate,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
         };
@@ -100,7 +106,8 @@ public class AuthService : IAuthService
         return new AuthenticationResult
         {
             Success = true,
-            Token = tokenHandler.WriteToken(token)
+            Token = tokenHandler.WriteToken(token),
+            ExpirationDate = expirationDate
         };
     }
 }
