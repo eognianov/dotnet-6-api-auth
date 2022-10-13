@@ -52,22 +52,50 @@ public class AuthService : IAuthService
             };
         }
 
+        return GenerateAuthenticationResultForUser(newUser);
+    }
+
+    public async Task<AuthenticationResult> UserLoginAsync(UserLoginRequestModel userLoginRequest)
+    {
+        var user = await _userManager.FindByNameAsync(userLoginRequest.Username);
+        if (user == null)
+        {
+            return new AuthenticationResult
+            {
+                Errors = new[] {"User does not exist!"}
+            };
+        }
+
+        var userHasValidPassword = await _userManager.CheckPasswordAsync(user, userLoginRequest.Password);
+        
+        if (!userHasValidPassword)
+        {
+            return new AuthenticationResult
+            {
+                Errors = new[] {"Wrong password!"}
+            };
+        }
+
+        return GenerateAuthenticationResultForUser(user);
+    }
+
+    private AuthenticationResult GenerateAuthenticationResultForUser(IdentityUser user)
+    {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, newUser.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
-                new Claim("id", newUser.Id),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("id", user.Id),
             }),
             Expires = DateTime.UtcNow.AddHours(2),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
         };
-
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return new AuthenticationResult
         {

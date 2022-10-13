@@ -22,8 +22,7 @@ public class AuthController : Controller
             
             return BadRequest(new AuthFailedResultModel
             {
-                // TODO: Get errors
-                Errors = new [] {"Validation Errors"}
+                Errors = ModelState.Values.SelectMany(v => v.Errors.Select(err => err.ErrorMessage))
             });
         }
         
@@ -42,5 +41,33 @@ public class AuthController : Controller
             {
                 Token = authResponse.Token!
             });
+    }
+
+    [HttpPost(Common.Routes.V1.Users.Login)]
+    public async Task<IActionResult> Login([FromBody] UserLoginRequestModel userLoginRequest)
+    {
+        if (!ModelState.IsValid)
+        {
+            
+            return BadRequest(new AuthFailedResultModel
+            {
+                Errors = ModelState.Values.SelectMany(v => v.Errors.Select(err => err.ErrorMessage))
+            });
+        }
+
+        var authResponse = await _authService.UserLoginAsync(userLoginRequest);
+        
+        if (!authResponse.Success)
+        {
+            return BadRequest(new AuthFailedResultModel
+            {
+                Errors = authResponse.Errors
+            });
+        }
+
+        return Ok(new AuthSuccessResultModel
+        {
+            Token = authResponse.Token
+        });
     }
 }

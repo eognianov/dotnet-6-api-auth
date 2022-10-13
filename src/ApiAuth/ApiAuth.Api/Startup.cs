@@ -105,6 +105,12 @@ public class Startup
 
         app.UseAuthorization();
 
-        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "api/{controller=Home}/{action=Index}/{id?}"
+            );
+        });
     }
 }

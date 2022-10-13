@@ -8,8 +8,10 @@ internal static class V1
 
     internal static class Users
     {
-        public const string SubRoute = $"{BaseRoute}/{Version}/users";
+        private const string SubRoute = $"{BaseRoute}/{Version}/users";
 
         public const string Register = $"{SubRoute}/register";
+
+        public const string Login = $"{SubRoute}/login";
     }
 }
