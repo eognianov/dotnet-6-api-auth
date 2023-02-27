@@ -40,7 +40,8 @@ public class AuthController : Controller
             new AuthSuccessResultModel
             {
                 Token = authResponse.Token!,
-                ExpirationDate = authResponse.ExpirationDate
+                ExpirationDate = authResponse.ExpirationDate,
+                RefreshToken = authResponse.RefreshToken!
             });
     }
 
@@ -69,7 +70,29 @@ public class AuthController : Controller
         return Ok(new AuthSuccessResultModel
         {
             Token = authResponse.Token!,
-            ExpirationDate = authResponse.ExpirationDate
+            ExpirationDate = authResponse.ExpirationDate,
+            RefreshToken = authResponse.RefreshToken!
+        });
+    }
+
+    [HttpPost(Common.Routes.V1.Users.Refresh)]
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestModel refreshTokenRequestModel)
+    {
+        var authResponse = await _authService.RefreshTokenAsync(refreshTokenRequestModel);
+
+        if (!authResponse.Success)
+        {
+            return BadRequest(new AuthFailedResultModel
+            {
+                Errors = authResponse.Errors!
+            });
+        }
+
+        return Ok(new AuthSuccessResultModel
+        {
+            Token = authResponse.Token!,
+            ExpirationDate = authResponse.ExpirationDate,
+            RefreshToken = authResponse.RefreshToken!
         });
     }
 }

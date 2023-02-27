@@ -13,5 +13,7 @@ internal static class V1
         public const string Register = $"{SubRoute}/register";
 
         public const string Login = $"{SubRoute}/login";
+
+        public const string Refresh = $"{SubRoute}/refresh";
     }
 }
