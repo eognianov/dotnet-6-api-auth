@@ -8,4 +8,6 @@ public interface IAuthService
     Task<AuthenticationResult> RegisterUserAsync(RegisterUserRequestModel registerUserRequest);
 
     Task<AuthenticationResult> UserLoginAsync(UserLoginRequestModel userLoginRequest);
+
+    Task<AuthenticationResult> RefreshTokenAsync(RefreshTokenRequestModel refreshTokenInputModel);
 }

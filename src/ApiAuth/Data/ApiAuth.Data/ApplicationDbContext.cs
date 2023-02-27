@@ -19,6 +19,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     {
     }
     
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public override int SaveChanges() => this.SaveChanges(true);
 
