@@ -15,6 +15,7 @@ public class DbInstaller : IInstaller
         })
             .AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
+                // TODO:  Extract it to configuration
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 3;
                 options.Password.RequireLowercase = false;

@@ -58,7 +58,7 @@ public class AuthService : IAuthService
             };
         }
 
-        return await GenerateAuthenticationResultForUserAsync(newUser);
+        return new AuthenticationResult {Success = true};
     }
 
     public async Task<AuthenticationResult> UserLoginAsync(UserLoginRequestModel userLoginRequest)
@@ -161,20 +161,29 @@ public class AuthService : IAuthService
         return await GenerateAuthenticationResultForUserAsync(user);
     }
 
-    private async Task<AuthenticationResult> GenerateAuthenticationResultForUserAsync(IdentityUser user)
+    private async Task<AuthenticationResult> GenerateAuthenticationResultForUserAsync(ApplicationUser user)
     {
         var expirationDate = DateTime.UtcNow.Add(_jwtSettings.TokenLifetime);
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+
+        var claims = new List<Claim>
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim("id", user.Id)
+        };
+
+        var userClaims = await _userManager.GetClaimsAsync(user);
+        claims.AddRange(userClaims);
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        claims.AddRange(userRoles.Select(userRole=>new Claim(ClaimTypes.Role, userRole)));
+        
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("id", user.Id),
-            }),
+            Subject = new ClaimsIdentity(claims),
             Expires = expirationDate,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
