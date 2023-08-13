@@ -16,6 +16,10 @@ public class AuthInstaller: IInstaller
         configuration.Bind(nameof(jwtSettings), jwtSettings);
         services.AddSingleton(jwtSettings);
 
+        var defaultUser = new DefaultUser();
+        configuration.Bind(nameof(defaultUser), defaultUser);
+        services.AddSingleton(defaultUser);
+        
         services.AddScoped<IAuthService, AuthService>();
         var tokenValidationParameters = new TokenValidationParameters
         {

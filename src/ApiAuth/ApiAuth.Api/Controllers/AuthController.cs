@@ -36,13 +36,7 @@ public class AuthController : Controller
             });
         }
 
-        return Ok(
-            new AuthSuccessResultModel
-            {
-                Token = authResponse.Token!,
-                ExpirationDate = authResponse.ExpirationDate,
-                RefreshToken = authResponse.RefreshToken!
-            });
+        return Ok($"Successful registration. Username {registerUserRequest.Username}");
     }
 
     [HttpPost(Common.Routes.V1.Users.Login)]
