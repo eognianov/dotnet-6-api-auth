@@ -58,7 +58,7 @@ public class Startup
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DefaultUser defaultUser)
     {
         if (env.IsDevelopment())
         {
@@ -76,9 +76,7 @@ public class Startup
         {
             var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
             var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                
-            var defaultUser = new DefaultUser();
-            Configuration.GetSection(nameof(DefaultUser)).Bind(defaultUser);
+            
             if (!roleManager.RoleExistsAsync(GlobalConstants.Roles.Admin).GetAwaiter().GetResult())
             {
                 var adminRole = new ApplicationRole(GlobalConstants.Roles.Admin);
