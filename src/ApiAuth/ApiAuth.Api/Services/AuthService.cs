@@ -198,7 +198,7 @@ public class AuthService : IAuthService
         };
     }
     
-    private ClaimsPrincipal GetPrincipalFromToken(string token, bool refresh = false)
+    private ClaimsPrincipal? GetPrincipalFromToken(string token, bool refresh = false)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
